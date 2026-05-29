@@ -1,23 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <title>Flappy Bird</title>
+    <title>Arcade Game Zone</title>
 </head>
 <body>
-    <div class="background">
 
+    <div id="main-menu" class="main-menu">
+        <h1>Choisis ton jeu</h1>
+        <div class="game-cards">
+            <button class="card-btn" onclick="switchScreen('flappy-game')">
+                <img src="img/Bird.png" alt="🐦" width="50" onerror="this.style.display='none'">
+                <span>Flappy Bird</span>
+            </button>
+            
+            <button class="card-btn" onclick="switchScreen('roulette-game')">
+                <img src="img/roulette.png" alt="🎰" width="50" onerror="this.style.display='none'">
+                <span>Roulette</span>
+            </button>
+
+            <button class="card-btn" onclick="switchScreen('memory-game')">
+                <img src="img/memory.png" alt="🃏" width="50" onerror="this.style.display='none'">
+                <span>Memory</span>
+            </button>
+
+            <button class="card-btn rules-btn" onclick="switchScreen('rules-screen')">
+                <span style="font-size: 40px;">📜</span>
+                <span>Règles du Jeu</span>
+            </button>
+        </div>
     </div>
-    <img src="img/Bird.png" alt="invalid-img" class="bird" width="70px" id="bird-1">
-    <div class="message">
-        Enter To Start Game <p><span style="color: red;">&uarr; </span> ArrowUp to Control</p>
+
+    <div id="flappy-game" class="game-screen hidden">
+        <button class="back-btn" onclick="switchScreen('main-menu')">⬅ Menu Principal</button>
+        
+        <div class="background"></div>
+        
+        <img src="img/Bird.png" alt="🐦" class="bird" id="bird-1">
+        
+        <div class="message">
+            Enter To Start Game <p><span style="color: red;">&uarr; </span> ArrowUp ou Espace pour Voler</p>
+        </div>
+        
+        <div class="score">
+            <span class="score_title"></span>
+            <span class="score_val"></span>
+        </div>
     </div>
-    <div class="score">
-        <span class="score_title"></span>
-        <span class="score_val"></span>
+
+    <div id="roulette-game" class="game-screen hidden">
+        <button class="back-btn" onclick="switchScreen('main-menu')">⬅ Menu Principal</button>
+        <h1 style="color: white; text-align: center; margin-top: 40vh; font-family: Arial;">🎰 Jeu de Roulette en développement...</h1>
     </div>
+
+    <div id="memory-game" class="game-screen hidden">
+        <button class="back-btn" onclick="switchScreen('main-menu')">⬅ Menu Principal</button>
+        <h1 style="color: white; text-align: center; margin-top: 40vh; font-family: Arial;"> 🃏 Jeu de Memory en développement...</h1>
+    </div>
+
+    <div id="rules-screen" class="game-screen hidden rules-bg">
+        <button class="back-btn" onclick="switchScreen('main-menu')">⬅ Menu Principal</button>
+        
+        <div class="rules-container">
+            <h2>📜 Règles des Jeux</h2>
+            
+            <div class="rules-section">
+                <h3>🐦 Flappy Bird</h3>
+                <p>Appuie sur <strong>Entrée</strong> pour démarrer la partie. Utilise la <strong>Flèche Haut</strong> ou la barre <strong>Espace</strong> pour faire battre les ailes de l'oiseau. Évite les tuyaux verts ! Chaque tuyau franchi te rapporte 1 point. Si tu touches le sol, le plafond ou un obstacle, c'est perdu !</p>
+            </div>
+
+            <div class="rules-section">
+                <h3>🎰 Roulette</h3>
+                <p>Place tes jetons sur tes numéros ou tes couleurs (Rouge / Noir) fétiches. Lance la roue de la roulette ! Si la bille s'arrête sur une case où tu as misé, tu remportes le pactole selon le type de pari effectué.</p>
+            </div>
+
+            <div class="rules-section">
+                <h3>🃏 Memory</h3>
+                <p>Retourne deux cartes à la fois pour essayer de trouver des paires identiques. Si les cartes correspondent, elles restent visibles, sinon elles se retournent à nouveau. Trouve toutes les paires en un minimum de coups ou de temps !</p>
+            </div>
+        </div>
+    </div>
+
     <script src="js/script.js"></script>
 </body>
 </html>
