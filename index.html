@@ -11,10 +11,10 @@
     <div id="main-menu" class="main-menu">
         <h1>Choisis ton jeu</h1>
         <div class="game-cards">
-            <button class="card-btn" onclick="switchScreen('flappy-game')">
-                <img src="img/Bird.png" alt="🐦" width="50" onerror="this.style.display='none'">
-                <span>Flappy Bird</span>
-            </button>
+            <button class="card-btn" onclick="window.location.href='page/flappy.html'">
+    <img src="img/Bird.png" alt="🐦" width="50" onerror="this.style.display='none'">
+    <span>Flappy Bird</span>
+</button>
             
             <button class="card-btn" onclick="switchScreen('roulette-game')">
                 <img src="img/roulette.png" alt="🎰" width="50" onerror="this.style.display='none'">
@@ -33,22 +33,6 @@
         </div>
     </div>
 
-    <div id="flappy-game" class="game-screen hidden">
-        <button class="back-btn" onclick="switchScreen('main-menu')">⬅ Menu Principal</button>
-        
-        <div class="background"></div>
-        
-        <img src="img/Bird.png" alt="🐦" class="bird" id="bird-1">
-        
-        <div class="message">
-            Enter To Start Game <p><span style="color: red;">&uarr; </span> ArrowUp ou Espace pour Voler</p>
-        </div>
-        
-        <div class="score">
-            <span class="score_title"></span>
-            <span class="score_val"></span>
-        </div>
-    </div>
 
     <div id="roulette-game" class="game-screen hidden">
         <button class="back-btn" onclick="switchScreen('main-menu')">⬅ Menu Principal</button>
