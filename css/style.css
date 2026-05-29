@@ -4,73 +4,245 @@
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+/* --- GESTION DES ÉCRANS & NAVIGATION --- */
+.game-screen {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- STYLE DU MENU PRINCIPAL --- */
+.main-menu {
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: white;
+    background-image: url(../img/Menu.jpg);
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+
+.main-menu::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1; 
+}
+
+.main-menu > * {
+    position: relative;
+    z-index: 2; 
+}
+
+.main-menu h1 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.game-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Permet aux 4 blocs de s'aligner proprement */
+    justify-content: center;
+}
+
+.card-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 180px;
+    height: 180px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.card-btn:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+/* Style spécifique pour le bouton des règles */
+.rules-btn {
+    background: rgba(255, 152, 0, 0.15);
+    border-color: rgba(255, 152, 0, 0.4);
+}
+.rules-btn:hover {
+    background: rgba(255, 152, 0, 0.3);
+    border-color: #ff9800;
+}
+
+/* Bouton Retour Global */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 200;
+    padding: 10px 20px;
+    background: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+    transition: background 0.2s;
+}
+
+.back-btn:hover {
+    background: #e64a19;
+}
+
+/* --- STYLE DE LA ZONE DES RÈGLES --- */
+.rules-bg {
+    background: linear-gradient(135deg, #111 0%, #222 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rules-container {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    padding: 40px;
+    color: white;
+    overflow-y: auto; /* Permet de scroller si le texte déborde */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.rules-container h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #ff9800;
+}
+
+.rules-section {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rules-section:last-child {
+    border-bottom: none;
+}
+
+.rules-section h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: #4caf50;
+}
+
+.rules-section p {
+    line-height: 1.6;
+    color: #ddd;
+}
+
+/* --- STYLE DU JEU FLAPPY BIRD --- */
 .background{
     height: 100vh;
     width: 100vw;
     background-image: url("../img/fond.webp");
     background-size: cover;
+    background-position: center;
 }
+
 .bird{
-    height: 100px;
-    width: 130px;
+    height: 90px;
+    width: 110px;
     position: fixed;
     top: 40vh;
     left: 30vw;
     z-index: 100;
 }
+
 .pipe_sprite{
     position: fixed;
     top: 40vh;
-    left: 100vh;
+    left: 100vw;
     height: 70vh;
     width: 6vw;
     background: radial-gradient(lightgreen 50%, green);
     border: 5px solid black;
+    z-index: 5;
 }
+
 .message{
     position: absolute;
     z-index: 10;
     color: black;
-    top: 30%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
+
 .messageStyle{
     background: white;
     padding: 30px;
-    box-shadow: rgba(0, 0, 0, 24) 0px 3px 8px;
-    border-radius: 5%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 10px;
 }
+
 .score{
     position: fixed;
     z-index: 10;
     height: 10vh;
-    font-size: 10vh;
-    font-weight: 100;
+    font-size: 8vh;
+    font-weight: bold;
     color: white;
     -webkit-text-stroke-width: 2px;
     -webkit-text-stroke-color: black;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 10px;
 }
+
 .score_val{
     color: gold;
-    font-weight: bold;
 }
+
+/* Responsivité */
 @media only screen and (max-width:1080px){
     .message{
-        font-size: 50px;
-        top: 50%;
+        font-size: 1.2rem;
         white-space: nowrap;
     }
     .score{
-        font-size: 8vh;
+        font-size: 6vh;
     }
     .bird{
-        width: 120px;
-        height: 90px;
+        width: 80px;
+        height: 65px;
     }
     .pipe_sprite{
         width: 14vw;
