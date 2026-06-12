@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/flappy.css">
     <title>Flappy Bird</title>
 </head>
 <body>
     
     <button class="back-btn" onclick="window.location.href='../index.html'">⬅ Menu Principal</button>
-    
+<div class="game-level">Niveau : <span id="level_val">1</span></div>    
     <div class="game-screen">
         <div class="background"></div>
         
-        <img src="../img/Bird.png" alt="🐦" class="bird" id="bird-1">
+        <img src="../img/mario.png" alt="🐦" class="bird" id="bird-1">
         
-        <div class="message">
-            Enter To Start Game <p><span style="color: red;">&uarr; </span> ArrowUp ou Espace pour Voler</p>
-        </div>
+        <div class="message"> Appuie sur Espace pour démarrer <p>Touche Espace pour sauter</p></div>
         
         <div class="score">
             <span class="score_title"></span>
@@ -25,7 +23,6 @@
         </div>
     </div>
 
-    <script src="../js/script.js"></script>
     <script src="../js/flappy.js"></script>
 </body>
 </html>
