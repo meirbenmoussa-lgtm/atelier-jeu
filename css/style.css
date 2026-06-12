@@ -164,35 +164,6 @@
     color: #ddd;
 }
 
-/* --- STYLE DU JEU FLAPPY BIRD --- */
-.background{
-    height: 100vh;
-    width: 100vw;
-    background-image: url("../img/fond.webp");
-    background-size: cover;
-    background-position: center;
-}
-
-.bird{
-    height: 90px;
-    width: 110px;
-    position: fixed;
-    top: 40vh;
-    left: 30vw;
-    z-index: 100;
-}
-
-.pipe_sprite{
-    position: fixed;
-    top: 40vh;
-    left: 100vw;
-    height: 70vh;
-    width: 6vw;
-    background: radial-gradient(lightgreen 50%, green);
-    border: 5px solid black;
-    z-index: 5;
-}
-
 .message{
     position: absolute;
     z-index: 10;
@@ -210,25 +181,6 @@
     padding: 30px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 10px;
-}
-
-.score{
-    position: fixed;
-    z-index: 10;
-    height: 10vh;
-    font-size: 8vh;
-    font-weight: bold;
-    color: white;
-    -webkit-text-stroke-width: 2px;
-    -webkit-text-stroke-color: black;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 10px;
-}
-
-.score_val{
-    color: gold;
 }
 
 /* Responsivité */

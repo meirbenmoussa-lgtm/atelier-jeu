@@ -1,0 +1,333 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* --- GESTION DES ÉCRANS & NAVIGATION --- */
+.game-screen {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- STYLE DU MENU PRINCIPAL --- */
+.main-menu {
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: white;
+    background-image: url(../img/Menu.jpg);
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+
+.main-menu::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1; 
+}
+
+.main-menu > * {
+    position: relative;
+    z-index: 2; 
+}
+
+.main-menu h1 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.game-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Permet aux 4 blocs de s'aligner proprement */
+    justify-content: center;
+}
+
+.card-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 180px;
+    height: 180px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.card-btn:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+/* Style spécifique pour le bouton des règles */
+.rules-btn {
+    background: rgba(255, 152, 0, 0.15);
+    border-color: rgba(255, 152, 0, 0.4);
+}
+.rules-btn:hover {
+    background: rgba(255, 152, 0, 0.3);
+    border-color: #ff9800;
+}
+
+/* Bouton Retour Global */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 200;
+    padding: 10px 20px;
+    background: #2905f5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+    transition: background 0.2s;
+}
+
+.back-btn:hover {
+    background: #ffd700;
+}
+
+/* --- STYLE DE LA ZONE DES RÈGLES --- */
+.rules-bg {
+    background: linear-gradient(135deg, #111 0%, #222 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rules-container {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    padding: 40px;
+    color: white;
+    overflow-y: auto; /* Permet de scroller si le texte déborde */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.rules-container h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #ff9800;
+}
+
+.rules-section {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rules-section:last-child {
+    border-bottom: none;
+}
+
+.rules-section h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: #4caf50;
+}
+
+.rules-section p {
+    line-height: 1.6;
+    color: #ddd;
+}
+
+/* --- STYLE DU JEU FLAPPY BIRD --- */
+.background{
+    height: 100vh;
+    width: 100vw;
+    background-image: url("../img/background.png");
+    background-size: cover;
+    background-position: center;
+}
+
+.bird{
+    height: 90px;
+    width: 110px;
+    position: fixed;
+    top: 40vh;
+    left: 30vw;
+    z-index: 100;
+}
+
+.pipe_sprite {
+    position: fixed;
+    top: 40vh;
+    left: 100vw;
+    height: 70vh;
+    width: 6vw;
+    /* Un dégradé linéaire aux couleurs officielles des tuyaux de Mario */
+    background: linear-gradient(90deg, #184800 0%, #48a810 20%, #70f828 40%, #48a810 60%, #002000 100%);
+    border-left: 4px solid #000;
+    border-right: 4px solid #000;
+    box-shadow: inset 0 15px 0 #002000, inset 0 -15px 0 #002000; /* Simule les ombres de raccords */
+    z-index: 5;
+}
+
+/* --- STYLE DU MESSAGE STYLE MARIO COMPATIBLE ÉCRANS & MOBILES --- */
+.message {
+    position: absolute;
+    z-index: 10;
+    color: #FFFFFF; 
+    top: 50%; /* Centré parfaitement au milieu de l'écran */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    
+    /* Taille de police fluide : s'adapte à la largeur de l'écran */
+    font-size: calc(1rem + 1vw); 
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace; 
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+    text-shadow: 3px 3px 0px #000000;
+    
+    /* Permet au bloc de s'adapter proprement */
+    width: 90%;
+    max-width: 500px; 
+    box-sizing: border-box;
+}
+
+.messageStyle {
+    background: #002FBE; 
+    border: 6px solid #E52521; 
+    
+    /* Marges internes adaptées : moins grosses sur petit écran */
+    padding: 20px 25px; 
+    
+    outline: 3px solid #F8B800;
+    outline-offset: -12px;
+    
+    box-shadow: 6px 6px 0px #000000; 
+    border-radius: 4px; 
+    
+    /* TRÈS IMPORTANT : Permet au texte de sauter à la ligne si l'écran est trop étroit */
+    white-space: normal; 
+    word-wrap: break-word; 
+}
+
+/* Le paragraphe secondaire (les instructions sous le "Game Over" ou "Start") */
+.message p {
+    color: #F8B800; 
+    font-size: calc(0.8rem + 0.5vw); /* Taille fluide pour mobile */
+    margin-top: 15px;
+    text-shadow: 2px 2px 0px #000000;
+    line-height: 1.4;
+}
+
+/* Animation de clignotement rétro sur la flèche */
+.message p span {
+    color: #E52521; 
+    animation: blink 0.8s infinite alternate;
+    display: inline-block;
+}
+
+@keyframes blink {
+    from { opacity: 1; }
+    to { opacity: 0.2; }
+}
+
+/* --- AJUSTEMENTS SPÉCIFIQUES POUR PETITS ÉCRANS (PHONES) --- */
+@media only screen and (max-width: 600px) {
+    .message {
+        letter-spacing: 1px; /* Réduit l'espace des lettres pour gagner de la place */
+    }
+    .messageStyle {
+        border: 4px solid #E52521; /* Bordure un poil plus fine */
+        outline: 2px solid #F8B800;
+        outline-offset: -8px;
+        padding: 15px 20px;
+    }
+}
+
+.score {
+    position: fixed;
+    z-index: 10;
+    height: 10vh;
+    font-size: 7vh; /* Légèrement réduit pour éviter les débordements sur petit écran */
+    font-weight: bold;
+    color: white;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: black;
+    
+    /* MODIFICATIONS ICI */
+    top: 60px; /* Descend en dessous du bouton Retour */
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+.score_val{
+    color: gold;
+}
+
+/* Responsivité */
+@media only screen and (max-width:1080px){
+    .message{
+        font-size: 1.2rem;
+        white-space: nowrap;
+    }
+    .score{
+        font-size: 6vh;
+    }
+    .bird{
+        width: 80px;
+        height: 65px;
+    }
+    .pipe_sprite{
+        width: 14vw;
+    }
+}
+.game-level {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+    padding: 10px 20px;
+    
+    /* Design Mario Rétro */
+    background: #002FBE; 
+    color: white;
+    border: 3px solid #E52521;
+    border-radius: 5px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    text-transform: uppercase;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+}
+
+#level_val {
+    color: #F8B800; /* Le chiffre du niveau s'affichera en jaune pièce d'or */
+}
