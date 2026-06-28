@@ -180,6 +180,17 @@
     color: #ddd;
 }
 
+.rules-section ul {
+    margin: 10px 0 0;
+    padding-left: 22px;
+    color: #ddd;
+    line-height: 1.7;
+}
+
+.rules-section li {
+    margin-bottom: 6px;
+}
+
 .message{
     position: absolute;
     z-index: 10;
