@@ -1,159 +1,105 @@
-// --- CONFIGURATION ET VARIABLES ---
-let move_speed = 5; 
-let gravity = 0.35;
-let game_state = 'Start';
-
-let bird = document.querySelector('.bird');
-let img = document.getElementById('bird-1');
-let message = document.querySelector('.message');
-let score_val = document.querySelector('.score_val');
-let score_title = document.querySelector('.score_title');
-
-let bird_props = bird.getBoundingClientRect();
-let background = document.querySelector('.background').getBoundingClientRect();
-
-let bird_dy = 0;
-let pipe_separation = 0;
-let pipe_gap = 38; 
-
-img.style.display = 'none';
-message.classList.add('messageStyle');
-
-// --- NAVIGATION INTER-JEUX ---
 function switchScreen(screenId) {
-    if (screenId === 'main-menu') {
-        game_state = 'Start'; 
-        document.querySelectorAll('.pipe_sprite').forEach(p => p.remove());
-        img.style.display = 'none';
-        bird.style.top = '40vh';
-        message.innerHTML = 'Enter To Start Game <p><span style="color: red;">&uarr; </span> ArrowUp ou Espace pour Voler</p>';
-        message.classList.add('messageStyle');
-        if(score_title) score_title.innerHTML = '';
-        if(score_val) score_val.innerHTML = '';
-    }
+    // Liste de tous les écrans possibles sur l'index
+    // (la Roulette n'est plus un écran ici : elle ouvre page/roulette.html)
+    const screens = ['main-menu', 'memory-game', 'rules-screen'];
 
-    // Masquer absolument TOUS les écrans existants
-    document.getElementById('main-menu').classList.add('hidden');
-    document.getElementById('flappy-game').classList.add('hidden');
-    document.getElementById('roulette-game').classList.add('hidden');
-    document.getElementById('memory-game').classList.add('hidden');
-    document.getElementById('rules-screen').classList.add('hidden'); // Gère l'écran des règles
-
-    // Afficher l'écran demandé
-    document.getElementById(screenId).classList.remove('hidden');
-
-    if (screenId === 'flappy-game') {
-        background = document.querySelector('.background').getBoundingClientRect();
-        bird_props = bird.getBoundingClientRect();
-    }
-}
-
-// --- ÉCOUTEURS DES TOUCHES ---
-document.addEventListener('keydown', (e) => {
-    if (document.getElementById('flappy-game').classList.contains('hidden')) return;
-
-    if (e.key == 'Enter' && game_state != 'Play') {
-        document.querySelectorAll('.pipe_sprite').forEach((element) => element.remove());
-        
-        img.style.display = 'block';
-        bird.style.top = '40vh';
-        bird_dy = 0;
-        game_state = 'Play';
-        
-        message.innerHTML = '';
-        message.classList.remove('messageStyle');
-        score_title.innerHTML = 'Score : ';
-        score_val.innerHTML = '0';
-        
-        requestAnimationFrame(move);
-        requestAnimationFrame(apply_gravity);
-        requestAnimationFrame(create_pipe);
-    }
-
-    if ((e.key == 'ArrowUp' || e.key == ' ') && game_state == 'Play') {
-        bird_dy = -7;
-    }
-});
-
-// --- BOUCLE 1 : DÉPLACEMENT DES TUYAUX & COLLISIONS ---
-function move() {
-    if (game_state != 'Play') return;
-
-    let pipe_sprites = document.querySelectorAll('.pipe_sprite');
-    bird_props = bird.getBoundingClientRect();
-
-    pipe_sprites.forEach((element) => {
-        let pipe_sprite_props = element.getBoundingClientRect();
-
-        if (pipe_sprite_props.right <= 0) {
-            element.remove();
-        } else {
-            if (bird_props.left < pipe_sprite_props.left + pipe_sprite_props.width &&
-                bird_props.left + bird_props.width > pipe_sprite_props.left &&
-                bird_props.top < pipe_sprite_props.top + pipe_sprite_props.height &&
-                bird_props.top + bird_props.height > pipe_sprite_props.top) {
-                
-                gameOver();
-                return;
+    screens.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            if (id === screenId) {
+                element.classList.remove('hidden');
             } else {
-                if (pipe_sprite_props.right < bird_props.left && 
-                    element.dataset.passed !== 'true' && 
-                    element.classList.contains('pipe_score')) {
-                    
-                    score_val.innerHTML = parseInt(score_val.innerHTML) + 1;
-                    element.dataset.passed = 'true'; 
-                }
-                element.style.left = pipe_sprite_props.left - move_speed + 'px';
+                element.classList.add('hidden');
             }
         }
     });
-    requestAnimationFrame(move);
+
+    // Bascule de la musique selon l'écran affiché.
+    switchAudio(screenId);
+};
+
+// Écrans qui gardent la musique du menu « Above Ground BGM »
+// (le menu principal et la page des Règles).
+// Tous les autres écrans sont des jeux -> musique « mario-world ».
+const MENU_SCREENS = ['main-menu', 'rules-screen'];
+
+function switchAudio(screenId) {
+    const menuAudio = document.getElementById('menu-audio');
+    const gameAudio = document.getElementById('game-audio');
+    if (!menuAudio || !gameAudio) return;
+
+    const keepMenuMusic = MENU_SCREENS.includes(screenId);
+    const toPlay = keepMenuMusic ? menuAudio : gameAudio;
+    const toStop = keepMenuMusic ? gameAudio : menuAudio;
+
+    toStop.pause();
+    toPlay.play().catch(() => {});
 }
 
-// --- BOUCLE 2 : PHYSIQUE DE L'OISEAU (GRAVITÉ) ---
-function apply_gravity() {
-    if (game_state != 'Play') return;
+// --- GESTION DES VIDÉOS ET DE L'AUDIO DU MENU ---
+document.addEventListener('DOMContentLoaded', () => {
+    const mainMenu   = document.getElementById('main-menu');
+    const introVideo = document.getElementById('menu-intro-video');
+    const loopVideo  = document.getElementById('menu-loop-video');
+    const menuAudio  = document.getElementById('menu-audio');
 
-    bird_dy += gravity;
-    bird_props = bird.getBoundingClientRect();
+    // --- VERROUILLAGE DU MENU PENDANT L'INTRO ---
+    // Pendant la vidéo d'intro (~10 s), les « mondes » et le bouton Règles
+    // ne sont pas cliquables (classe « locked » sur #main-menu).
+    // On déverrouille (classe « active ») dans 3 cas :
+    //   1. la vidéo d'intro se termine,
+    //   2. le joueur appuie sur ESPACE pour passer l'animation,
+    //   3. au bout de 10 s maxi (sécurité, si la vidéo ne se charge pas).
+    let menuUnlocked = false;
 
-    if (bird_props.top <= 0 || bird_props.bottom >= background.bottom) {
-        gameOver();
-        return;
+    const unlockMenu = () => {
+        if (menuUnlocked || !mainMenu) return;
+        menuUnlocked = true;
+
+        // Bascule vers la vidéo de fond (en boucle) si pas déjà fait.
+        if (introVideo && loopVideo && !introVideo.classList.contains('hidden')) {
+            introVideo.pause();
+            introVideo.classList.add('hidden');
+            loopVideo.classList.remove('hidden');
+            loopVideo.play().catch(() => {});
+        }
+
+        // Active les boutons + lance les animations de flottement.
+        mainMenu.classList.remove('locked');
+        mainMenu.classList.add('active');
+
+        document.removeEventListener('keydown', onSkipKey);
+    };
+
+    // ESPACE = passer l'animation tout de suite.
+    const onSkipKey = (e) => {
+        if (e.code === 'Space' || e.key === ' ') {
+            e.preventDefault();
+            unlockMenu();
+        }
+    };
+    document.addEventListener('keydown', onSkipKey);
+
+    // Fin de la vidéo d'intro -> déverrouillage.
+    if (introVideo) {
+        introVideo.addEventListener('ended', unlockMenu);
     }
 
-    bird.style.top = bird_props.top + bird_dy + 'px';
-    requestAnimationFrame(apply_gravity);
-}
+    // Sécurité : on déverrouille au bout de 10 s quoi qu'il arrive.
+    setTimeout(unlockMenu, 10000);
 
-// --- BOUCLE 3 : GÉNÉRATION DES TUYAUX ---
-function create_pipe() {
-    if (game_state != 'Play') return;
-
-    if (pipe_separation > 100) {
-        pipe_separation = 0;
-        let pipe_posi = Math.floor(Math.random() * 40) + 10;
-
-        let pipe_sprite_inv = document.createElement('div');
-        pipe_sprite_inv.className = 'pipe_sprite';
-        pipe_sprite_inv.style.top = pipe_posi - 70 + 'vh';
-        pipe_sprite_inv.style.left = '100vw';
-        document.body.appendChild(pipe_sprite_inv);
-
-        let pipe_sprite = document.createElement('div');
-        pipe_sprite.className = 'pipe_sprite pipe_score'; 
-        pipe_sprite.style.top = pipe_posi + pipe_gap + 'vh';
-        pipe_sprite.style.left = '100vw';
-        document.body.appendChild(pipe_sprite);
+    // Musique du menu : jouée une fois au lancement.
+    // Les navigateurs bloquent l'audio tant que l'utilisateur n'a pas
+    // interagi avec la page (sécurité). On tente de jouer tout de suite,
+    // et si c'est bloqué on démarre à la première interaction.
+    if (menuAudio) {
+        const events = ['click', 'keydown', 'pointerdown', 'touchstart'];
+        menuAudio.play().catch(() => {
+            const unlock = () => {
+                menuAudio.play().catch(() => {});
+                events.forEach(evt => document.removeEventListener(evt, unlock));
+            };
+            events.forEach(evt => document.addEventListener(evt, unlock));
+        });
     }
-    pipe_separation++;
-    requestAnimationFrame(create_pipe);
-}
-
-// --- ÉCRAN DE FIN DE PARTIE ---
-function gameOver() {
-    game_state = 'End';
-    message.innerHTML = '<span style="color: red; font-size: 2rem; font-weight: bold;">Game Over</span><br>Press Enter To Restart';
-    message.classList.add('messageStyle');
-    img.style.display = 'none';
-}
+});

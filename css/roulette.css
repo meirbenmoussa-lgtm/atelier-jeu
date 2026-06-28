@@ -1,0 +1,114 @@
+/* MACHINE À SOUS MARIO — feuille de style (responsive) */
+
+/* 1) FOND & MISE EN PAGE */
+body {
+    margin: 0; min-height: 100vh; overflow: hidden;   /* la machine déborde un peu : pas de scroll */
+    display: flex; align-items: center; justify-content: center;
+    background: #1d1d42; color: #1a1a2e; font-family: Arial, Helvetica, sans-serif;
+}
+.slot { display: flex; flex-direction: column; align-items: center; }
+
+/* 2) MACHINE & ROULEAUX (la machine garde les proportions de l'image 2500x1536) */
+.machine { position: relative; width: min(112vw, calc(112vh * 2500 / 1536)); }
+.machine-img { display: block; width: 100%; height: auto; }
+/* Les 3 rouleaux posés sur les fenêtres de l'image (ajuste left/top/width/height) */
+.reels { position: absolute; left: 27.5%; top: 36%; width: 44%; height: 40%; display: flex; gap: 2%; }
+.reel { flex: 1; position: relative; overflow: hidden; }
+.reel-strip { display: flex; flex-direction: column; mix-blend-mode: multiply; }   /* fond blanc fondu */
+.reel-cell { display: flex; align-items: center; justify-content: center; }
+.reel-cell .symbol { width: 60%; height: 100%; object-fit: contain; }
+.reel.spinning .reel-strip { filter: blur(2.6px); }   /* flou pendant la rotation */
+
+/* 3) BOUTON SPIN (rond, posé sur le levier — ajuste right/top) */
+.spin-btn {
+    position: absolute; right: 16.3%; top: 34.5%; transform: translateY(-50%);
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1px; line-height: 1.05;
+    width: clamp(56px, 11vw, 80px); height: clamp(56px, 11vw, 80px); padding: 0; border-radius: 50%;
+    font-size: clamp(.7rem, 2.2vw, .9rem); font-weight: 900; letter-spacing: 1px; color: #fff;
+    background: radial-gradient(circle at 35% 30%, #ff726e 0%, #e52521 55%, #a3140f 100%);
+    border: 2px solid rgba(255, 255, 255, .35); cursor: pointer;
+    box-shadow: inset -3px -4px 8px rgba(0,0,0,.35), inset 3px 3px 7px rgba(255,255,255,.45), 0 5px 12px rgba(0,0,0,.35);
+    transition: transform .08s, box-shadow .08s, filter .2s;
+}
+.spin-btn:active:not(:disabled) { transform: translateY(calc(-50% + 4px)); box-shadow: 0 1px 0 #a3140f, 0 3px 8px rgba(0,0,0,.3); }
+.spin-btn.free { background: #1565d8; box-shadow: 0 5px 0 #0d3f8c, 0 8px 14px rgba(0,0,0,.3); }   /* tour gratuit */
+.spin-btn:disabled { opacity: .55; cursor: default; filter: grayscale(.4); box-shadow: 0 5px 0 rgba(0,0,0,.25); }
+.spin-cost { font-size: .8em; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; opacity: .95; }
+
+/* 4) MESSAGE & RECOMMENCER */
+.message { margin-top: 16px; font-size: clamp(1.1rem, 4vw, 1.5rem); font-weight: 900; min-height: 1.4em; text-shadow: 1px 1px 0 rgba(255,255,255,.6); }
+.message.gain    { color: #0d8b3f; }
+.message.jackpot { color: #e52521; }
+.message.perte   { color: #8a8a8a; }
+.message.warn    { color: #e52521; }
+.reset-btn { margin-top: 12px; padding: 10px 22px; font-size: 1rem; font-weight: 800; color: #fff; background: #0d8b3f; border: 3px solid #fff; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 0 #075a28; }
+
+/* 5) HUD : PIÈCES, JAUGE, BOOSTS */
+.hud { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; max-width: 96vw; z-index: 100; }
+.coin-counter { display: flex; align-items: center; gap: 8px; background: linear-gradient(#3a3a6a, #23234a); border: 3px solid #fff; border-radius: 30px; padding: 6px 18px 6px 10px; box-shadow: 0 4px 0 rgba(0,0,0,.35); }
+.coin-counter.bump { animation: bump .3s ease; }
+.coin-count { font-weight: 900; font-size: 1.4rem; color: #ffd11a; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000; min-width: 2ch; text-align: center; }
+.gauge { position: relative; width: clamp(140px, 30vw, 240px); height: 24px; background: #2a2a4a; border: 3px solid #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 0 rgba(0,0,0,.35); }
+.gauge-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: linear-gradient(90deg, #ffe259, #ffa751); transition: width .5s ease; }
+.gauge-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .8rem; letter-spacing: 2px; color: #fff; text-shadow: 1px 1px 0 #000; }
+.gauge.full { animation: gaugeFull .4s ease infinite alternate; }
+.boosts { display: flex; gap: 8px; }
+.boost { color: #fff; font-weight: 800; border: 2px solid #fff; border-radius: 20px; padding: 4px 10px; font-size: .82rem; background: #e52521; box-shadow: 0 3px 0 rgba(0,0,0,.3); white-space: nowrap; }
+.boost.multi  { background: #0d8b3f; }
+.boost.free   { background: #1565d8; }
+.boost.shield { background: linear-gradient(#ffd11a, #ff9a00); color: #5a3a00; text-shadow: none; }
+
+/* 6) PIÈCE DORÉE MARIO (dessinée en CSS) */
+.mario-coin {
+    display: inline-block; box-sizing: border-box; width: 30px; height: 30px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff6c0 0%, #ffd11a 45%, #e09a00 100%);
+    border: 2px solid #a86b00; position: relative; vertical-align: middle;
+    box-shadow: inset -2px -3px 4px rgba(120,70,0,.45), inset 2px 2px 4px rgba(255,255,255,.7);
+    animation: coinFlip 2.4s ease-in-out infinite;
+}
+.mario-coin::after { content: ''; position: absolute; inset: 5px; border-radius: 50%; border: 2px solid rgba(170,107,0,.55); }
+.mario-coin.mini { width: 20px; height: 20px; animation: none; }   /* petite pièce (sur le bouton) */
+.mario-coin.mini::after { inset: 3px; border-width: 1.5px; }
+
+/* 7) STATISTIQUES (bas de l'écran) */
+.stats {
+    position: fixed; left: 50%; bottom: 10px; transform: translateX(-50%); z-index: 100;
+    max-width: 96vw; padding: 7px 16px; background: rgba(20,20,40,.78); border: 2px solid rgba(255,255,255,.85);
+    border-radius: 20px; color: #fff; font-size: clamp(.72rem, 2.6vw, .92rem); font-weight: 600;
+    text-align: center; white-space: nowrap; overflow-x: auto; cursor: pointer; box-shadow: 0 3px 0 rgba(0,0,0,.35);
+}
+.stats b { color: #ffd11a; }
+
+/* 8) BANNIÈRE DE BONUS (texte qui surgit au centre) */
+.bonus-banner {
+    position: fixed; top: 42%; left: 50%; transform: translate(-50%, -50%) scale(.4); z-index: 120;
+    background: linear-gradient(#ffd11a, #ff9a00); color: #7a3b00; font-weight: 900;
+    font-size: clamp(1.3rem, 5vw, 2.2rem); line-height: 1.25; text-align: center; padding: 20px 38px;
+    border: 5px solid #fff; border-radius: 22px; box-shadow: 0 0 0 4px #b97e00, 0 14px 34px rgba(0,0,0,.4);
+    text-shadow: 2px 2px 0 rgba(255,255,255,.55); opacity: 0; pointer-events: none;
+}
+.bonus-banner.show { animation: bannerPop 2.1s ease forwards; }
+
+/* 9) BOUTON RETOUR */
+.back-btn {
+    position: absolute; top: 20px; left: 20px; z-index: 200; padding: 10px 20px;
+    background: #ff5722; color: white; border: none; border-radius: 5px; cursor: pointer;
+    font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,.3); transition: background .2s;
+}
+.back-btn:hover { background: #e64a19; }
+
+/* 10) ANIMATIONS (@keyframes) */
+@keyframes coinFlip { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(.18); } }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.22); } 100% { transform: scale(1); } }
+@keyframes gaugeFull {
+    from { box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 0 0 rgba(255,220,0,0); }
+    to   { box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 0 18px rgba(255,220,0,.95); }
+}
+@keyframes bannerPop {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(.4); }
+    14%  { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+    24%  { transform: translate(-50%, -50%) scale(1); }
+    82%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -62%) scale(.9); }
+}

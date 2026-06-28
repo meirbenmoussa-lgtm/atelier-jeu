@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/roulette.css">
+  <title>Mario Jackpot</title>
+</head>
+<body>
+
+  <!-- Retour au menu principal -->
+  <button class="back-btn" onclick="window.location.href='../index.html'">⬅ Menu Principal</button>
+
+  <!-- HUD (en haut) : pièces · jauge de bonus · badges de bonus -->
+  <div class="hud">
+    <div class="coin-counter" id="coinCounter">
+      <span class="mario-coin"></span>
+      <span class="coin-count" id="coinCount">1000</span>
+    </div>
+
+    <div class="gauge" id="gauge">
+      <div class="gauge-fill" id="gaugeFill"></div>
+      <span class="gauge-label">BONUS</span>
+    </div>
+
+    <div class="boosts" id="boosts"></div>
+  </div>
+
+  <!-- Le jeu : image de la machine + 3 rouleaux + bouton SPIN + message -->
+  <div class="slot">
+    <div class="machine" id="machine">
+      <img class="machine-img" src="../img/slot-machine.png" alt="Machine à sous Super Mario">
+      <div class="reels">
+        <div class="reel"><div class="reel-strip" id="r1"></div></div>
+        <div class="reel"><div class="reel-strip" id="r2"></div></div>
+        <div class="reel"><div class="reel-strip" id="r3"></div></div>
+      </div>
+
+      <button class="spin-btn" id="spinBtn">
+        <span class="spin-label">SPIN</span>
+        <span class="spin-cost" id="spinCost"><span class="mario-coin mini"></span> 20</span>
+      </button>
+    </div>
+
+    <p class="message" id="message"></p>
+  </div>
+
+  <!-- Couches d'effets, par-dessus le jeu -->
+  <div class="bonus-banner" id="bonusBanner"></div>  <!-- bannière de bonus -->
+  <div class="stats"        id="stats"></div>        <!-- statistiques -->
+
+  <!-- Scripts -->
+  <script src="../js/game-audio.js"></script>
+  <script src="../js/roulette.js"></script>
+</body>
+</html>
