@@ -5,61 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/style.css" />
     <title>Arcade Game Zone</title>
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="main-menu" class="main-menu locked">
-        <!-- Vidéo d'introduction : jouée une seule fois au lancement -->
-        <video id="menu-intro-video" class="menu-video" autoplay muted playsinline>
-            <source src="vidéo/menu.mp4" type="video/mp4">
-        </video>
-        <!-- Vidéo de fond : en boucle dans le menu après l'intro -->
-        <video id="menu-loop-video" class="menu-video hidden" loop muted playsinline>
-            <source src="vidéo/menu2.0.mp4" type="video/mp4">
-        </video>
-        <!-- Musique du menu (et des Règles) : Above Ground BGM -->
-        <audio id="menu-audio" src="audio/01. Above Ground BGM.mp3" preload="auto" loop></audio>
-        <!-- Son d'entrée dans un jeu : mario-world (joué une seule fois) -->
-        <audio id="game-audio" src="audio/mario-world.com.mp3" preload="auto"></audio>
+      <!-- Vidéo d'introduction : jouée une seule fois au lancement -->
+      <video
+        id="menu-intro-video"
+        class="menu-video"
+        autoplay
+        muted
+        playsinline
+      >
+        <source src="vidéo/menu.mp4" type="video/mp4" />
+      </video>
+      <!-- Vidéo de fond : en boucle dans le menu après l'intro -->
+      <video
+        id="menu-loop-video"
+        class="menu-video hidden"
+        loop
+        muted
+        playsinline
+      >
+        <source src="vidéo/menu2.0.mp4" type="video/mp4" />
+      </video>
+      <!-- Musique du menu (et des Règles) : Above Ground BGM -->
+      <audio
+        id="menu-audio"
+        src="audio/01. Above Ground BGM.mp3"
+        preload="auto"
+        loop
+      ></audio>
+      <!-- Son d'entrée dans un jeu : mario-world (joué une seule fois) -->
+      <audio
+        id="game-audio"
+        src="audio/mario-world.com.mp3"
+        preload="auto"
+      ></audio>
 
-        <!-- Texte d'aide pendant l'intro : permet de passer l'animation.
+      <!-- Texte d'aide pendant l'intro : permet de passer l'animation.
              Caché automatiquement une fois le menu actif (.main-menu.active). -->
-        <div class="skip-hint">
-            Appuie sur <strong>ESPACE</strong> pour passer l'animation…
-        </div>
+      <div class="skip-hint">
+        Appuie sur <strong>ESPACE</strong> pour passer l'animation…
+      </div>
 
-        <!-- Les 3 « mondes » cliquables, posés par-dessus la vidéo du menu.
+      <!-- Les 3 « mondes » cliquables, posés par-dessus la vidéo du menu.
              Inactifs pendant l'intro, puis activés (.main-menu.active). -->
-        <div id="worlds" class="worlds">
-            <button class="world-hotspot world-roulette"
-                    onclick="window.location.href='page/roulette.html'"
-                    aria-label="Jouer à la Roulette">
-                <span class="world-label">🎰 Roulette</span>
-            </button>
+      <div id="worlds" class="worlds">
+        <button
+          class="world-hotspot world-roulette"
+          onclick="window.location.href = 'page/roulette.html'"
+          aria-label="Jouer à la Roulette"
+        >
+          <span class="world-label">🎰 Roulette</span>
+        </button>
 
-            <button class="world-hotspot world-flappy"
-                    onclick="window.location.href='page/flappy.html'"
-                    aria-label="Jouer à Flappy Mario">
-                <span class="world-label">🐦 Flappy</span>
-            </button>
+        <button
+          class="world-hotspot world-flappy"
+          onclick="window.location.href = 'page/flappy.html'"
+          aria-label="Jouer à Flappy Mario"
+        >
+          <span class="world-label">🐦 Flappy</span>
+        </button>
 
-            <button class="world-hotspot world-memory"
-                    onclick="switchScreen('memory-game')"
-                    aria-label="Jouer au Memory">
-                <span class="world-label">🃏 Memory</span>
-            </button>
-        </div>
+        <button
+          class="world-hotspot world-memory"
+          onclick="switchScreen('memory-game')"
+          aria-label="Jouer au Memory"
+        >
+          <span class="world-label">🃏 Memory</span>
+        </button>
+      </div>
 
-        <!-- Cache le filigrane Gemini/Veo incrusté en bas à droite de la vidéo. -->
-        <div class="video-cover" aria-hidden="true"></div>
+      <!-- Cache le filigrane Gemini/Veo incrusté en bas à droite de la vidéo. -->
+      <div class="video-cover" aria-hidden="true"></div>
 
-        <!-- Pas de « monde » dédié aux Règles : on garde ce bouton en bas. -->
-        <div class="game-cards">
-            <button class="card-btn rules-btn" onclick="switchScreen('rules-screen')">
-                <span style="font-size: 40px;">📜</span>
-                <span>Règles du Jeu</span>
-            </button>
-        </div>
+      <!-- Pas de « monde » dédié aux Règles : on garde ce bouton en bas. -->
+      <div class="game-cards">
+        <button
+          class="card-btn rules-btn"
+          onclick="switchScreen('rules-screen')"
+        >
+          <span style="font-size: 40px">📜</span>
+          <span>Règles du Jeu</span>
+        </button>
+      </div>
     </div>
 
     <div id="roulette-game" class="game-screen hidden">
@@ -100,39 +129,62 @@
       </button>
 
       <div class="rules-container">
-        <h2>📜 Règles des Jeux</h2>
+    <h2>📜 Règles des Jeux</h2>
 
-        <div class="rules-section">
-          <h3>🐦 Flappy Bird</h3>
-          <p>
-            Appuie sur <strong>Entrée</strong> pour démarrer la partie. Utilise
-            la <strong>Flèche Haut</strong> ou la barre
-            <strong>Espace</strong> pour faire battre les ailes de l'oiseau.
-            Évite les tuyaux verts ! Chaque tuyau franchi te rapporte 1 point.
-            Si tu touches le sol, le plafond ou un obstacle, c'est perdu !
-          </p>
-        </div>
+    <div class="rules-section">
+        <h3>🐦 Flappy Bird</h3>
+        <p>
+            Appuie sur la barre <strong>Espace</strong> pour démarrer la partie
+            et faire sauter le personnage. Évite les tuyaux ! Chaque tuyau
+            franchi te rapporte 1 point et augmente la difficulté au fil des
+            niveaux. Si tu touches le sol, le plafond ou un obstacle, c'est
+            perdu ! Appuie sur <strong>Entrée</strong> pour rejouer.
+        </p>
+    </div>
 
-        <div class="rules-section">
-          <h3>🎰 Roulette</h3>
-          <p>
-            Place tes jetons sur tes numéros ou tes couleurs (Rouge / Noir)
-            fétiches. Lance la roue de la roulette ! Si la bille s'arrête sur
-            une case où tu as misé, tu remportes le pactole selon le type de
-            pari effectué.
-          </p>
-        </div>
+    <div class="rules-section">
+        <h3>🎰 Machine à sous Mario</h3>
+        <p><strong>But du jeu :</strong> Tente de remporter le Jackpot en faisant tourner les rouleaux et gère ton économie de pièces pour ne pas finir ruiné !</p>
+        
+        <p><strong>Mise et départ :</strong></p>
+        <ul>
+            <li>Tu commences la partie avec un capital de <strong>1 000 pièces</strong> 🪙.</li>
+            <li>Chaque lancer (Spin) te coûte <strong>20 pièces</strong>.</li>
+        </ul>
 
-        <div class="rules-section">
-          <h3>🃏 Memory</h3>
-          <p>
+        <p><strong>Combinaisons et Gains :</strong></p>
+        <ul>
+            <li><strong>2 symboles identiques (Paire) :</strong> Tu gagnes <strong>4 pièces</strong> et ta jauge de bonus augmente de <strong>12%</strong>.</li>
+            <li><strong>3 Champignons Rouges :</strong> Tu gagnes <strong>75 pièces</strong> et ta jauge augmente de <strong>35%</strong>.</li>
+            <li><strong>💥 JACKPOT (3 Grands Champignons) :</strong> Tu gagnes <strong>200 pièces</strong> et ta jauge augmente de <strong>55%</strong> !</li>
+        </ul>
+
+        <p><strong>Bonus et Événements spéciaux :</strong></p>
+        <ul>
+            <li><strong>⭐ L'Étoile :</strong> Si une étoile apparaît, tu obtiens un <strong>Bouclier de 2 tours</strong> 🛡️ qui a 1 chance sur 2 de bloquer une défaite.</li>
+            <li><strong>🍄 Champignon Violet (Danger) :</strong> Si tu obtiens 2 ou 3 champignons violets, c'est la <strong>Défaite</strong> ! Un événement négatif se déclenche au hasard :
+                <ul>
+                    <li>💣 <strong>Bombe :</strong> Perte immédiate de pièces.</li>
+                    <li>🦝 <strong>Voleur :</strong> Te dérobe 15% de tes pièces.</li>
+                    <li>👻 <strong>Boo (Malédiction) :</strong> Ta jauge de bonus est complètement vidée.</li>
+                </ul>
+            </li>
+            <li><strong>🎁 Jauge de Bonus (100%) :</strong> Une fois remplie, elle déclenche un bonus aléatoire parmi : 50 pièces offertes, 3 lancers gratuits, ou des gains doublés (×2) pendant 5 tours !</li>
+        </ul>
+
+        <p><strong>Fin de partie :</strong> Si tu n'as plus assez de pièces, un bouton <strong>🔄 Recommencer</strong> apparaît pour réinitialiser ton capital à 1 000 pièces.</p>
+    </div>
+
+    <div class="rules-section">
+        <h3>🃏 Memory</h3>
+        <p>
             Retourne deux cartes à la fois pour essayer de trouver des paires
             identiques. Si les cartes correspondent, elles restent visibles,
             sinon elles se retournent à nouveau. Trouve toutes les paires en un
             minimum de coups ou de temps !
-          </p>
-        </div>
-      </div>
+        </p>
+    </div>
+</div>
     </div>
 
     <script src="js/script.js"></script>
