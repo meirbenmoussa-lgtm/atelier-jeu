@@ -1,0 +1,398 @@
+/* ============================================================
+   MACHINE À SOUS MARIO — feuille de style (responsive)
+
+   Plan du fichier :
+     1) Fond & mise en page        6) Pièce dorée Mario
+     2) Machine & rouleaux         7) Statistiques
+     3) Bouton SPIN                8) Effets (pièces, bannière, étoile)
+     4) Message & Recommencer      9) Bouton retour
+     5) HUD (pièces, jauge…)      10) Animations (@keyframes)
+   ============================================================ */
+
+/* ================= 1) FOND & MISE EN PAGE ================= */
+body {
+    margin: 0;
+    min-height: 100vh;
+    overflow: hidden;   /* la machine agrandie peut déborder un peu : pas de barres de défilement */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Couleur de secours (#1d1d42) si l'image de fond est absente */
+    background: #1d1d42 url(../img/fond-roulette.png) center / cover no-repeat fixed;
+    color: #1a1a2e;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Empile la machine, le bouton et le message, centrés */
+.slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+}
+
+/* ================= 2) MACHINE & ROULEAUX ================= */
+/* La machine remplit l'écran en gardant les proportions de l'image (2500 x 1536).
+   Le 1.12 l'agrandit ; les bords (hors fenêtres) débordent un peu et sont rognés. */
+.machine {
+    position: relative;
+    width: min(112vw, calc(112vh * 2500 / 1536));
+}
+.machine-img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* Les 3 rouleaux posés PILE sur les 3 fenêtres de l'image.
+   ⚠️ Ajuste ces 4 valeurs si les champignons ne tombent pas dans les fenêtres. */
+.reels {
+    position: absolute;
+    left: 27.5%;   /* bord gauche de la 1re fenêtre */
+    top: 36%;      /* haut des fenêtres */
+    width: 44%;    /* largeur des 3 fenêtres */
+    height: 40%;   /* hauteur des fenêtres */
+    display: flex;
+    gap: 2%;
+}
+.reel {
+    flex: 1;
+    position: relative;
+    overflow: hidden;            /* cache la partie de la bande hors fenêtre */
+}
+/* La bande verticale qui défile (animée en JS) */
+.reel-strip {
+    display: flex;
+    flex-direction: column;
+    mix-blend-mode: multiply;    /* le fond blanc des images se fond dans la fenêtre */
+}
+.reel-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.reel-cell .symbol {
+    width: 60%;
+    height: 100%;
+    object-fit: contain;         /* l'image ne se déforme pas */
+}
+.reel.spinning .reel-strip { filter: blur(2.6px); }   /* flou pendant la rotation */
+
+/* ================= 3) BOUTON SPIN ================= */
+/* Posé directement sur l'image, à droite au niveau du levier (la boule rouge).
+   ⚠️ Ajuste "right" / "top" pour le replacer sur le levier de la machine. */
+.spin-btn {
+    position: absolute;
+    right: 16.5%;
+    top: 34.5%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    line-height: 1.05;
+    /* Bouton rond, façon boule du levier */
+    width: clamp(70px, 15vw, 104px);
+    height: clamp(70px, 15vw, 104px);
+    padding: 0;
+    border-radius: 50%;
+    font-size: clamp(.85rem, 2.8vw, 1.1rem);
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #fff;
+    /* Dégradé pour un effet de bille 3D qui se fond sur la machine */
+    background: radial-gradient(circle at 35% 30%, #ff726e 0%, #e52521 55%, #a3140f 100%);
+    border: 2px solid rgba(255, 255, 255, .35);   /* contour discret pour fondre */
+    cursor: pointer;
+    /* Reflet + ombre douce au lieu d'un contour franc */
+    box-shadow: inset -3px -4px 8px rgba(0, 0, 0, .35),
+                inset 3px 3px 7px rgba(255, 255, 255, .45),
+                0 5px 12px rgba(0, 0, 0, .35);
+    transition: transform .08s, box-shadow .08s, filter .2s;
+}
+.spin-btn:active:not(:disabled) {        /* effet "appuyé" */
+    transform: translateY(calc(-50% + 4px));
+    box-shadow: 0 1px 0 #a3140f, 0 3px 8px rgba(0, 0, 0, .3);
+}
+.spin-btn.free {                         /* tour gratuit : bouton bleu */
+    background: #1565d8;
+    box-shadow: 0 5px 0 #0d3f8c, 0 8px 14px rgba(0, 0, 0, .3);
+}
+.spin-btn:disabled {                     /* pas assez de pièces */
+    opacity: .55;
+    cursor: default;
+    filter: grayscale(.4);
+    box-shadow: 0 5px 0 rgba(0, 0, 0, .25);
+}
+.spin-cost {
+    font-size: .8em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 800;
+    opacity: .95;
+}
+
+/* ================= 4) MESSAGE & RECOMMENCER ================= */
+.message {
+    margin-top: 16px;
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    font-weight: 900;
+    min-height: 1.4em;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, .6);
+}
+.message.gain    { color: #0d8b3f; }     /* gain normal */
+.message.jackpot { color: #e52521; }     /* gros gain */
+.message.perte   { color: #8a8a8a; }     /* perte */
+.message.warn    { color: #e52521; }     /* avertissement */
+
+.reset-btn {
+    margin-top: 12px;
+    padding: 10px 22px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    background: #0d8b3f;
+    border: 3px solid #fff;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #075a28;
+}
+
+/* ================= 5) HUD : PIÈCES, JAUGE, BOOSTS ================= */
+.hud {
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    max-width: 96vw;
+    z-index: 100;
+}
+
+/* Compteur de pièces */
+.coin-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(#3a3a6a, #23234a);
+    border: 3px solid #fff;
+    border-radius: 30px;
+    padding: 6px 18px 6px 10px;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, .35);
+}
+.coin-counter.bump { animation: bump .3s ease; }    /* petit bond quand le total change */
+.coin-count {
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: #ffd11a;
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000;
+    min-width: 2ch;
+    text-align: center;
+}
+
+/* Jauge de bonus */
+.gauge {
+    position: relative;
+    width: clamp(140px, 30vw, 240px);
+    height: 24px;
+    background: #2a2a4a;
+    border: 3px solid #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, .35);
+}
+.gauge-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0%;
+    background: linear-gradient(90deg, #ffe259, #ffa751);
+    transition: width .5s ease;
+}
+.gauge-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: .8rem;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+}
+.gauge.full { animation: gaugeFull .4s ease infinite alternate; }   /* clignote quand pleine */
+
+/* Badges de bonus actifs */
+.boosts { display: flex; gap: 8px; }
+.boost {
+    color: #fff;
+    font-weight: 800;
+    border: 2px solid #fff;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: .82rem;
+    background: #e52521;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, .3);
+    white-space: nowrap;
+}
+.boost.multi  { background: #0d8b3f; }
+.boost.free   { background: #1565d8; }
+.boost.shield { background: linear-gradient(#ffd11a, #ff9a00); color: #5a3a00; text-shadow: none; }
+
+/* ================= 6) PIÈCE DORÉE MARIO (dessinée en CSS) ================= */
+.mario-coin {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff6c0 0%, #ffd11a 45%, #e09a00 100%);
+    border: 2px solid #a86b00;
+    box-shadow: inset -2px -3px 4px rgba(120, 70, 0, .45),
+                inset 2px 2px 4px rgba(255, 255, 255, .7);
+    position: relative;
+    vertical-align: middle;
+    animation: coinFlip 2.4s ease-in-out infinite;
+}
+.mario-coin::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    border: 2px solid rgba(170, 107, 0, .55);
+}
+.mario-coin.mini { width: 20px; height: 20px; animation: none; }   /* petite pièce (sur le bouton) */
+.mario-coin.mini::after { inset: 3px; border-width: 1.5px; }
+
+/* ================= 7) STATISTIQUES (bas de l'écran) ================= */
+.stats {
+    position: fixed;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    z-index: 100;
+    max-width: 96vw;
+    padding: 7px 16px;
+    background: rgba(20, 20, 40, .78);
+    border: 2px solid rgba(255, 255, 255, .85);
+    border-radius: 20px;
+    color: #fff;
+    font-size: clamp(.72rem, 2.6vw, .92rem);
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    overflow-x: auto;
+    cursor: pointer;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, .35);
+}
+.stats b { color: #ffd11a; }
+
+/* ================= 8) EFFETS (pièces qui volent, bannière, étoile) ================= */
+/* Couche des pièces dorées qui jaillissent de la machine */
+.coin-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 110;
+}
+.fly-wrap { position: absolute; animation: coinFly .95s cubic-bezier(.25, .9, .3, 1) forwards; }
+.fly-wrap .mario-coin.flying { width: 34px; height: 34px; animation: coinFlip .35s linear infinite; }
+
+/* Bannière de bonus (texte qui surgit au centre) */
+.bonus-banner {
+    position: fixed;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(.4);
+    background: linear-gradient(#ffd11a, #ff9a00);
+    color: #7a3b00;
+    font-weight: 900;
+    font-size: clamp(1.3rem, 5vw, 2.2rem);
+    line-height: 1.25;
+    text-align: center;
+    padding: 20px 38px;
+    border: 5px solid #fff;
+    border-radius: 22px;
+    box-shadow: 0 0 0 4px #b97e00, 0 14px 34px rgba(0, 0, 0, .4);
+    text-shadow: 2px 2px 0 rgba(255, 255, 255, .55);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 120;
+}
+.bonus-banner.show { animation: bannerPop 2.1s ease forwards; }
+
+/* Effets de l'étoile : flash plein écran + secousse de la machine */
+.flash {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;            /* ne bloque jamais les clics */
+    background: rgba(255, 255, 255, .85);
+    animation: flashFade .5s ease forwards;
+}
+.flash.rainbow { background: linear-gradient(45deg, #ff5252, #ffd740, #69f0ae, #40c4ff, #e040fb); }
+.machine.shake { animation: shake .6s ease; }
+
+/* ================= 9) BOUTON RETOUR ================= */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 200;
+    padding: 10px 20px;
+    background: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background 0.2s;
+}
+.back-btn:hover { background: #e64a19; }
+
+/* ================= 10) ANIMATIONS (@keyframes) ================= */
+@keyframes coinFlip {        /* la pièce tourne sur elle-même */
+    0%, 100% { transform: scaleX(1); }
+    50%      { transform: scaleX(.18); }
+}
+@keyframes bump {            /* le compteur fait un petit bond */
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.22); }
+    100% { transform: scale(1); }
+}
+@keyframes gaugeFull {       /* la jauge pleine brille */
+    from { box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 0 0 rgba(255, 220, 0, 0); }
+    to   { box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 0 18px rgba(255, 220, 0, .95); }
+}
+@keyframes coinFly {         /* la pièce jaillit puis monte et disparaît */
+    0%   { transform: translate(-50%, -50%) scale(.4);  opacity: 0; }
+    18%  { opacity: 1; }
+    45%  { transform: translate(-50%, calc(-50% - 110px)) scale(1); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% - 240px)) scale(.85); opacity: 0; }
+}
+@keyframes bannerPop {       /* la bannière surgit puis s'efface */
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(.4); }
+    14%  { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+    24%  { transform: translate(-50%, -50%) scale(1); }
+    82%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -62%) scale(.9); }
+}
+@keyframes flashFade {       /* le flash de l'étoile s'estompe */
+    from { opacity: .85; }
+    to   { opacity: 0; }
+}
+@keyframes shake {           /* la machine tremble */
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-12px) rotate(-1deg); }
+    40%      { transform: translateX(12px)  rotate(1deg); }
+    60%      { transform: translateX(-8px); }
+    80%      { transform: translateX(8px); }
+}

@@ -5,52 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/style.css" />
     <title>Arcade Game Zone</title>
-  </head>
-  <body>
-    <div id="main-menu" class="main-menu">
-      <h1>Choisis ton jeu</h1>
-      <div class="game-cards">
-        <button
-          class="card-btn"
-          onclick="window.location.href = 'page/flappy.html'"
-        >
-          <img
-            src="img/mario.png"
-            alt="🐦"
-            width="50"
-            onerror="this.style.display = 'none'"
-          />
-          <span>Flappy Bird</span>
-        </button>
+</head>
+<body>
 
-        <button class="card-btn" onclick="switchScreen('roulette-game')">
-          <img
-            src="img/roulette.png"
-            alt="🎰"
-            width="50"
-            onerror="this.style.display = 'none'"
-          />
-          <span>Roulette</span>
-        </button>
+    <div id="main-menu" class="main-menu locked">
+        <!-- Vidéo d'introduction : jouée une seule fois au lancement -->
+        <video id="menu-intro-video" class="menu-video" autoplay muted playsinline>
+            <source src="vidéo/menu.mp4" type="video/mp4">
+        </video>
+        <!-- Vidéo de fond : en boucle dans le menu après l'intro -->
+        <video id="menu-loop-video" class="menu-video hidden" loop muted playsinline>
+            <source src="vidéo/menu2.0.mp4" type="video/mp4">
+        </video>
+        <!-- Musique du menu (et des Règles) : Above Ground BGM -->
+        <audio id="menu-audio" src="audio/01. Above Ground BGM.mp3" preload="auto" loop></audio>
+        <!-- Son d'entrée dans un jeu : mario-world (joué une seule fois) -->
+        <audio id="game-audio" src="audio/mario-world.com.mp3" preload="auto"></audio>
 
-        <button class="card-btn" onclick="switchScreen('memory-game')">
-          <img
-            src="img/memory.png"
-            alt="🃏"
-            width="50"
-            onerror="this.style.display = 'none'"
-          />
-          <span>Memory</span>
-        </button>
+        <!-- Texte d'aide pendant l'intro : permet de passer l'animation.
+             Caché automatiquement une fois le menu actif (.main-menu.active). -->
+        <div class="skip-hint">
+            Appuie sur <strong>ESPACE</strong> pour passer l'animation…
+        </div>
 
-        <button
-          class="card-btn rules-btn"
-          onclick="switchScreen('rules-screen')"
-        >
-          <span style="font-size: 40px">📜</span>
-          <span>Règles du Jeu</span>
-        </button>
-      </div>
+        <!-- Les 3 « mondes » cliquables, posés par-dessus la vidéo du menu.
+             Inactifs pendant l'intro, puis activés (.main-menu.active). -->
+        <div id="worlds" class="worlds">
+            <button class="world-hotspot world-roulette"
+                    onclick="window.location.href='page/roulette.html'"
+                    aria-label="Jouer à la Roulette">
+                <span class="world-label">🎰 Roulette</span>
+            </button>
+
+            <button class="world-hotspot world-flappy"
+                    onclick="window.location.href='page/flappy.html'"
+                    aria-label="Jouer à Flappy Mario">
+                <span class="world-label">🐦 Flappy</span>
+            </button>
+
+            <button class="world-hotspot world-memory"
+                    onclick="switchScreen('memory-game')"
+                    aria-label="Jouer au Memory">
+                <span class="world-label">🃏 Memory</span>
+            </button>
+        </div>
+
+        <!-- Cache le filigrane Gemini/Veo incrusté en bas à droite de la vidéo. -->
+        <div class="video-cover" aria-hidden="true"></div>
+
+        <!-- Pas de « monde » dédié aux Règles : on garde ce bouton en bas. -->
+        <div class="game-cards">
+            <button class="card-btn rules-btn" onclick="switchScreen('rules-screen')">
+                <span style="font-size: 40px;">📜</span>
+                <span>Règles du Jeu</span>
+            </button>
+        </div>
     </div>
 
     <div id="roulette-game" class="game-screen hidden">

@@ -19,17 +19,33 @@
 
 /* --- STYLE DU MENU PRINCIPAL --- */
 .main-menu {
-    position: relative; 
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;   /* boutons positionnés vers le bas */
     height: 100vh;
+    padding-bottom: 8vh;          /* marge entre les boutons et le bas de l'écran */
     color: white;
     background-image: url(../img/Menu.jpg);
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+/* Vidéo de fond du menu */
+.main-menu .menu-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    z-index: 0;
 }
 
 .main-menu::before {
@@ -39,8 +55,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    z-index: 1; 
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 1;
 }
 
 .main-menu > * {
@@ -199,4 +215,147 @@
     .pipe_sprite{
         width: 14vw;
     }
+}
+
+/* ===================================================================== */
+/* === LES 3 MONDES CLIQUABLES (posés par-dessus la vidéo du menu) ===== */
+/* ===================================================================== */
+
+/* Conteneur des mondes : occupe tout l'écran mais ne capte rien lui-même.
+   Seuls les hotspots actifs sont cliquables. */
+.main-menu .worlds {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Une zone cliquable transparente posée sur chaque monde de la vidéo. */
+.world-hotspot {
+    position: absolute;
+    background: transparent;
+    border: none;            /* plus de cadre -> plus de "détourage" qui dépasse */
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+    transform-origin: center;
+    /* Par défaut (pendant l'intro) : invisible et NON cliquable. */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.25s ease;
+}
+
+/* Lueur douce (sans bord net) qui apparaît au survol, posée derrière le monde. */
+.world-hotspot::before {
+    content: "";
+    position: absolute;
+    inset: -8%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side,
+                rgba(255, 213, 79, 0.45) 0%,
+                rgba(255, 213, 79, 0.15) 45%,
+                rgba(255, 213, 79, 0) 72%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+/* Position de chaque monde, en % de l'écran (calé sur la vidéo de fond). */
+.world-roulette { left: 12%; top: 41%; width: 19%; height: 35%; }
+.world-flappy   { left: 37%; top: 40%; width: 25%; height: 35%; }
+.world-memory   { left: 66%; top: 42%; width: 22%; height: 34%; }
+
+/* Petite étiquette sous chaque monde. */
+.world-label {
+    position: absolute;
+    bottom: -38px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.05rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+/* --- ÉTAT ACTIF : après l'intro (ou après avoir appuyé sur ESPACE) --- */
+.main-menu.active .world-hotspot {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Survol d'un monde : ZOOM + lueur douce (aucun cadre net -> pas de
+   problème de détourage, même si la zone n'est pas pile sur le monde). */
+.main-menu.active .world-hotspot:hover {
+    transform: scale(1.12);
+    z-index: 5;
+}
+.main-menu.active .world-hotspot:hover::before {
+    opacity: 1;
+}
+
+/* L'étiquette n'apparaît qu'au survol du monde correspondant. */
+.main-menu.active .world-hotspot:hover .world-label {
+    opacity: 1;
+}
+
+/* --- TEXTE « passer l'animation » (visible seulement pendant l'intro) --- */
+.main-menu .skip-hint {
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    padding: 12px 24px;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 999px;
+    color: #fff;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    animation: hint-pulse 1.4s ease-in-out infinite;
+}
+.main-menu .skip-hint strong { color: #ffd54f; }
+.main-menu.active .skip-hint { display: none; }
+
+@keyframes hint-pulse {
+    0%, 100% { opacity: 0.6; }
+    50%      { opacity: 1; }
+}
+
+/* --- BOUTON RÈGLES : en bas à droite, caché pendant l'intro --- */
+.main-menu .game-cards {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    z-index: 4;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+}
+.main-menu.active .game-cards {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* --- CACHE DU FILIGRANE GEMINI/VEO (coin bas-droit de la vidéo) --- */
+/* On floute ce coin (au lieu d'un bloc opaque) et on fond les bords avec
+   un masque en dégradé : le filigrane devient illisible sans pavé visible.
+   Toujours présent, y compris pendant l'intro. */
+.main-menu .video-cover {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 210px;
+    height: 95px;
+    z-index: 2;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    -webkit-mask-image: radial-gradient(125% 125% at 100% 100%, #000 55%, transparent 82%);
+            mask-image: radial-gradient(125% 125% at 100% 100%, #000 55%, transparent 82%);
 }
