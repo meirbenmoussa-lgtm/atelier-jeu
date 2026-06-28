@@ -31,6 +31,14 @@ header h1 { margin: 0 0 10px 0; font-size: 0.85rem; text-shadow: 2px 2px 0 #ffff
     font: bold 0.55rem 'Press Start 2P', cursive; text-shadow: 1px 1px 0 #000;
     transition: transform 0.1s, box-shadow 0.1s;
 }
+
+.back-btn {
+    position: absolute; bottom: 20px; left: 20px; z-index: 200; padding: 10px 20px;
+    background: #ff5722; color: white; border: none; border-radius: 5px; cursor: pointer;
+    font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,.3); transition: background .2s;
+}
+.back-btn:hover { background: #e64a19; }
+
 #music-btn { background: #2ecc71; box-shadow: 0 4px 0 #27ae60; }
 #music-btn:hover { background: #27ae60; transform: translateY(2px); box-shadow: 0 2px 0 #27ae60; }
 #reset-btn { background: #2980b9; box-shadow: 0 4px 0 #1f618d; }
