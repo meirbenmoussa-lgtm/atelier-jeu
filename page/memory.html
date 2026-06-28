@@ -1,11 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory</title>
+    <title>Luigi's Mory</title>
+    <link rel="stylesheet" href="../css/memory.css">
 </head>
 <body>
-    
+
+    <audio id="bg-music" src="../eset/musique.mp3" loop></audio>
+<header class="game-interface">
+        <div class="controls">
+            <button id="music-btn">🎵 Lancer la musique</button>
+            <button id="reset-btn">🔄 Rejouer</button>
+        </div>
+        <div class="score-board">
+            <div>Essais : <strong id="try-count">0</strong></div>
+            <div>Paires : <strong id="match-count">0</strong></div>
+        </div>
+    </header>
+
+    <div class="croupier-container">
+        <img src="../eset/fond2.png" alt="Le Croupier" class="croupier-img">
+    </div>
+
+    <main class="table-casino">
+        <div class="memory-game" id="game-board"></div>
+    </main>
+ 
+    <script src="../js/memory.js"></script>
 </body>
 </html>
