@@ -17,8 +17,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Couleur de secours (#1d1d42) si l'image de fond est absente */
-    background: #1d1d42 url(../img/fond-roulette.png) center / cover no-repeat fixed;
+    /* Fond uni : la machine occupe quasi tout l'écran, on voit à peine le fond */
+    background: #1d1d42;
     color: #1a1a2e;
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -82,8 +82,8 @@ body {
 /* Posé directement sur l'image, à droite au niveau du levier (la boule rouge).
    ⚠️ Ajuste "right" / "top" pour le replacer sur le levier de la machine. */
 .spin-btn {
-    position: absolute;
-    right: 16.5%;
+    position:absolute;
+    right: 16.3%;
     top: 34.5%;
     transform: translateY(-50%);
     display: inline-flex;
@@ -93,11 +93,11 @@ body {
     gap: 1px;
     line-height: 1.05;
     /* Bouton rond, façon boule du levier */
-    width: clamp(70px, 15vw, 104px);
-    height: clamp(70px, 15vw, 104px);
+    width: clamp(56px, 11vw, 80px);
+    height: clamp(56px, 11vw, 80px);
     padding: 0;
     border-radius: 50%;
-    font-size: clamp(.85rem, 2.8vw, 1.1rem);
+    font-size: clamp(.7rem, 2.2vw, .9rem);
     font-weight: 900;
     letter-spacing: 1px;
     color: #fff;

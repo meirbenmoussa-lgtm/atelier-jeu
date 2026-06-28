@@ -1,6 +1,7 @@
 function switchScreen(screenId) {
     // Liste de tous les écrans possibles sur l'index
-    const screens = ['main-menu', 'roulette-game', 'memory-game', 'rules-screen'];
+    // (la Roulette n'est plus un écran ici : elle ouvre page/roulette.html)
+    const screens = ['main-menu', 'memory-game', 'rules-screen'];
 
     screens.forEach(id => {
         const element = document.getElementById(id);
